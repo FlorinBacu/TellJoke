@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">IntentJoke</string>
+    <string name="title_activity_joke">JokeActivity</string>
 </resources>

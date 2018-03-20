@@ -48,4 +48,6 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     compile project(path: ':TellingJoke')
+    compile project(path: ':intentjoke')
+    compile project(path: ':intentjoke')
 }
