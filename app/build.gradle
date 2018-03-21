@@ -31,17 +31,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    flavorDimensions "free", "paid"
+    flavorDimensions "app"
     productFlavors{
         free
                 {
                     applicationId "com.udacity.gradle.builditbigger.free"
-                    dimension "free"
+                    dimension "app"
                 }
         paid
                 {
                     applicationId "com.udacity.gradle.builditbigger.paid"
-                    dimension "paid"
+                    dimension "app"
                 }
     }
 }
