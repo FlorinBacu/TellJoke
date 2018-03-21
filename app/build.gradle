@@ -21,7 +21,7 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
-
+        applicationId ''
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -30,6 +30,19 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    flavorDimensions "free", "paid"
+    productFlavors{
+        free
+                {
+                    applicationId "com.udacity.gradle.builditbigger.free"
+                    dimension "free"
+                }
+        paid
+                {
+                    applicationId "com.udacity.gradle.builditbigger.paid"
+                    dimension "paid"
+                }
     }
 }
 
@@ -48,6 +61,5 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     compile project(path: ':TellingJoke')
-    compile project(path: ':intentjoke')
     compile project(path: ':intentjoke')
 }
