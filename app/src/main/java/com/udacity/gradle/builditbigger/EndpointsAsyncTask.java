@@ -1,6 +1,9 @@
 package com.udacity.gradle.builditbigger;
 
 import android.content.Context;
+import android.content.Intent;
+import android.example.com.intentjoke.JokeActivity;
+import android.example.com.tellingjoke.TellJoke;
 import android.os.AsyncTask;
 import android.util.Pair;
 import android.widget.Toast;
@@ -37,7 +40,7 @@ public class EndpointsAsyncTask  extends AsyncTask<Pair<Context, String>, Void, 
                         }
                     });
             // end options for devappserver
-
+            context = params[0].first;
             myApiService = builder.build();
         }
 
@@ -45,12 +48,17 @@ public class EndpointsAsyncTask  extends AsyncTask<Pair<Context, String>, Void, 
         try {
             return myApiService.tellJoke().execute().getData();
         } catch (IOException e) {
-            return e.getMessage();
+           return e.getMessage();
         }
+
     }
 
     @Override
     protected void onPostExecute(String result) {
-        Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+        if (context != null) {
+            Intent intent = new Intent(context, JokeActivity.class);
+            intent.putExtra("joke", result);
+            context.startActivity(intent);
+        }
     }
 }

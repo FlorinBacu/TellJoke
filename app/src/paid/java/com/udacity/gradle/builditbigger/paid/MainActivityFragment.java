@@ -28,7 +28,6 @@ public class MainActivityFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_main, container, false);
 
 
-
         new EndpointsAsyncTask().execute(new Pair<Context, String>(this.getActivity(), "Manfred"));
         return root;
     }
