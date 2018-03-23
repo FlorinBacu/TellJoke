@@ -1,4 +1,4 @@
-package android.example.com.intentjoke;
+package android.example.com.builditbigger;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="android.example.com.intentjoke">
+    package="android.example.com.builditbigger">
 
     <application>
         <activity
-            android:name=".JokeActivity"
+            android:name="android.example.com.com.udacity.gradle.builditbigger.JokeActivity"
             android:label="@string/title_activity_joke"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

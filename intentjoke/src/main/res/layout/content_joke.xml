@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="android.example.com.intentjoke.JokeActivity"
+    tools:context="android.example.com.builditbigger.JokeActivity"
     tools:showIn="@layout/activity_joke">
 
     <TextView
