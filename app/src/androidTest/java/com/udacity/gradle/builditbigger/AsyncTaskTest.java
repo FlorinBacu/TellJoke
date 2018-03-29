@@ -37,7 +37,16 @@ public class AsyncTaskTest {
         Pair[][] param = new Pair[1][1];
         param[0]= new Pair[1];
         param[0][0]=new Pair<Context, String>(appContext, "Manfred");
-        String jokeOutput = (String)endmethod.invoke(endpoint,param );
+        String jokeOutput;
+        Runnable r=new Runnable() {
+            @Override
+            public void run() {
+                jokeOutput = (String)endmethod.invoke(endpoint,param );
+            }
+        }
+        Thread t=new Thread(r);
+        t.start();
+        t.join();
         TellJoke tj=new TellJoke();
         assertEquals(tj.tellJoke(),jokeOutput);
 
