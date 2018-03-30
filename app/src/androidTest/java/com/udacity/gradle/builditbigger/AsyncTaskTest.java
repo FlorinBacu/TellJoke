@@ -5,18 +5,21 @@ import android.example.com.tellingjoke.TellJoke;
 import android.os.AsyncTask;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.text.TextUtils;
 import android.util.Pair;
 
-import com.udacity.gradle.builditbigger.EndpointsAsyncTask;
-
-import org.junit.Assert;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.concurrent.CountDownLatch;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNull;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -25,30 +28,56 @@ import static junit.framework.Assert.assertEquals;
  */
 @RunWith(AndroidJUnit4.class)
 public class AsyncTaskTest {
-    @Test
-    public void loadJokeTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        // Context of the app under test.
-        //http://tutorials.jenkov.com/java-reflection/private-fields-and-methods.html
-        Context appContext = InstrumentationRegistry.getTargetContext();
-        AsyncTask<Pair<Context, String>, Void, String> endpoint = new EndpointsAsyncTask();
-        Class<? extends AsyncTask> endclass = endpoint.getClass();
-        Method endmethod = EndpointsAsyncTask.class.getDeclaredMethod("doInBackground", Pair[].class);
-        endmethod.setAccessible(true);
-        Pair[][] param = new Pair[1][1];
-        param[0]= new Pair[1];
-        param[0][0]=new Pair<Context, String>(appContext, "Manfred");
-        String jokeOutput;
-        Runnable r=new Runnable() {
-            @Override
-            public void run() {
-                jokeOutput = (String)endmethod.invoke(endpoint,param );
+    
+    public static class EndpointsAsyncTaskTestVersion extends EndpointsAsyncTask
+    {
+        TaskListener mListener;
+        private InterruptedException mError;
+
+        public EndpointsAsyncTaskTestVersion setListener(TaskListener listener) {
+            this.mListener = listener;
+            return this;
+        }
+        @Override
+        protected void onPostExecute(String s) {
+            if (this.mListener != null)
+                this.mListener.onComplete(s, mError);
+        }
+
+        @Override
+        protected void onCancelled() {
+            if (this.mListener != null) {
+                mError = new InterruptedException("AsyncTask cancelled");
+                this.mListener.onComplete(null, mError);
             }
         }
-        Thread t=new Thread(r);
-        t.start();
-        t.join();
+        public static interface TaskListener {
+            public void onComplete(String jsonString, Exception e);
+        }
+    };
+    CountDownLatch signal = null;
+
+    public Exception mError;
+    public String jokeString;
+    @Test
+    public void loadJokeTest() throws InterruptedException {
+        signal = new CountDownLatch(1);
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        Pair<Context, String> pairTest = new Pair<Context, String>(appContext, "Manfred");
+        EndpointsAsyncTaskTestVersion testTask=new EndpointsAsyncTaskTestVersion();
+        testTask.setListener(new EndpointsAsyncTaskTestVersion.TaskListener() {
+            @Override
+            public void onComplete(String textString, Exception e) {
+                jokeString = textString;
+                mError = e;
+                signal.countDown();
+            }
+        }).execute(pairTest);
+        signal.await();
+       assertNull(mError);
         TellJoke tj=new TellJoke();
-        assertEquals(tj.tellJoke(),jokeOutput);
+        assertEquals(tj.tellJoke(),jokeString);
+       
 
     }
 }
