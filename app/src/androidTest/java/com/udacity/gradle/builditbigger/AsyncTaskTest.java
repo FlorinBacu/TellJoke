@@ -20,6 +20,7 @@ import java.util.concurrent.CountDownLatch;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -63,7 +64,7 @@ public class AsyncTaskTest {
     public void loadJokeTest() throws InterruptedException {
         signal = new CountDownLatch(1);
         Context appContext = InstrumentationRegistry.getTargetContext();
-        Pair<Context, String> pairTest = new Pair<Context, String>(appContext, "Manfred");
+
         EndpointsAsyncTaskTestVersion testTask=new EndpointsAsyncTaskTestVersion();
         testTask.setListener(new EndpointsAsyncTaskTestVersion.TaskListener() {
             @Override
@@ -72,11 +73,12 @@ public class AsyncTaskTest {
                 mError = e;
                 signal.countDown();
             }
-        }).execute(pairTest);
+        }).execute(appContext);
         signal.await();
        assertNull(mError);
         TellJoke tj=new TellJoke();
         assertEquals(tj.tellJoke(),jokeString);
+        assertNotEquals(jokeString,"");
        
 
     }
